@@ -4,6 +4,8 @@ images:
   base_image:
     name: registry.access.redhat.com/ubi9/ubi:latest
 dependencies:
+  python_interpreter:
+    package_system: python3
   ansible_core:
     package_pip: ansible-core
   ansible_runner:
@@ -12,3 +14,6 @@ dependencies:
     - openssh-clients
     - sshpass
     - git
+  galaxy:
+    collections:
+    - name: community.postgresql
