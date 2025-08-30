@@ -1,0 +1,30 @@
+name: Build and Push EE
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install ansible-builder
+      run: pip install ansible ansible-builder
+
+    - name: Build EE
+      run: ansible-builder build --container-runtime=docker -t ${{ vars.DOCKER_USERNAME }}/my-ee:base
+
+    - name: Scan Image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ vars.DOCKER_USERNAME }}/my-ee:base
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with: 
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push to Docker Hub
+      run: docker push ${{ vars.DOCKER_USERNAME }}/my-ee:base
