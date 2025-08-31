@@ -1,4 +1,4 @@
-name: Build and Push EE
+name: Build, test, and scan my-ee:base
 on:
   pull_request:
     branches:
@@ -9,22 +9,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install ansible-builder
-      run: pip install ansible ansible-builder
+    - name: Install ansible and ansible-navigator
+      run: pip install ansible ansible-navigator
 
     - name: Build EE
-      run: ansible-builder build --container-runtime=docker -t ${{ vars.DOCKER_USERNAME }}/my-ee:base
+      run: ansible-builder build --container-runtime=docker -t ${{ vars.DOCKER_USERNAME }}/my-ee:candidate
 
     - name: Scan Image
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ${{ vars.DOCKER_USERNAME }}/my-ee:base
+        image-ref: ${{ vars.DOCKER_USERNAME }}/my-ee:candidate
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with: 
-        username: ${{ vars.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Push to Docker Hub
-      run: docker push ${{ vars.DOCKER_USERNAME }}/my-ee:base
+    - name: Test image against localhost
+      run: ansible-navigator run tests/test_localhost.yml --execution-environment-image ${{ vars.DOCKER_USERNAME }}/my-ee:candidate --mode stdout --pull-policy never --container-engine docker --container-options='--user=0'
