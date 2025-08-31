@@ -1,6 +1,6 @@
 # Ansible Execution Environment Builder
 
-[![.github/workflows/push-base.yaml](https://github.com/Jmangle93/ee-builder/actions/workflows/push-base.yaml/badge.svg)](https://github.com/Jmangle93/ee-builder/actions/workflows/push-base.yaml)
+[![Build and Push my-ee:base](https://github.com/Jmangle93/ee-builder/actions/workflows/push-base.yaml/badge.svg)](https://github.com/Jmangle93/ee-builder/actions/workflows/push-base.yaml)
 
 Update, test, and push changes to your Ansible execution environment based on the RHEL9 UBI image.
 Whether this repo becomes genuinely worthwhile for that purpose is less immediately important than learning these tools.
