@@ -12,6 +12,7 @@ dependencies:
     package_pip: ansible-runner
   system:
     - openssh-clients
+    - openshift-clients
     - sshpass
     - git
   galaxy:
